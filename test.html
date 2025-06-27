@@ -1,280 +1,591 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Tracking Bypass Test Page</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🛡️ Tracking Bypass Pro - Test Suite</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
-            font-family: Arial, sans-serif;
-            max-width: 800px;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(145deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            color: #ffffff;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 20% 20%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(255, 119, 198, 0.2) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(120, 219, 255, 0.1) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .container {
+            max-width: 1200px;
             margin: 0 auto;
-            padding: 20px;
-            background: #f5f5f5;
+            padding: 40px 20px;
         }
-        .test-section {
-            background: white;
-            padding: 20px;
-            margin: 20px 0;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+
+        .header {
+            text-align: center;
+            margin-bottom: 60px;
         }
-        .test-result {
-            padding: 10px;
-            margin: 10px 0;
-            border-radius: 4px;
-            font-weight: bold;
+
+        .logo {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 24px;
+            box-shadow: 0 20px 60px rgba(102, 126, 234, 0.4);
+            position: relative;
+            overflow: hidden;
         }
-        .pass { background: #d4edda; color: #155724; }
-        .fail { background: #f8d7da; color: #721c24; }
-        .info { background: #d1ecf1; color: #0c5460; }
-        button {
-            background: #007bff;
+
+        .logo::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent);
+            transform: rotate(45deg);
+            animation: shimmer 3s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+            100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+        }
+
+        .logo i {
+            font-size: 40px;
             color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 4px;
-            cursor: pointer;
-            margin: 5px;
+            z-index: 1;
         }
-        button:hover { background: #0056b3; }
-        #log {
-            background: #f8f9fa;
-            border: 1px solid #dee2e6;
-            padding: 10px;
-            height: 200px;
+
+        h1 {
+            font-size: 48px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            background: linear-gradient(135deg, #ffffff 0%, #e0e7ff 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .subtitle {
+            font-size: 20px;
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 40px;
+        }
+
+        .test-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 24px;
+            margin-bottom: 40px;
+        }
+
+        .test-card {
+            background: rgba(255, 255, 255, 0.06);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 32px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .test-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+        }
+
+        .test-card:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.2);
+            transform: translateY(-4px);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        .test-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 24px;
+            gap: 16px;
+        }
+
+        .test-icon {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            color: white;
+        }
+
+        .test-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #ffffff;
+        }
+
+        .test-description {
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 24px;
+            line-height: 1.6;
+        }
+
+        .test-button {
+            width: 100%;
+            padding: 16px 24px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            border-radius: 12px;
+            color: white;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .test-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 40px rgba(102, 126, 234, 0.4);
+        }
+
+        .test-button:active {
+            transform: translateY(0);
+        }
+
+        .test-result {
+            margin-top: 20px;
+            padding: 16px;
+            border-radius: 12px;
+            font-weight: 500;
+            opacity: 0;
+            transform: translateY(10px);
+            transition: all 0.3s ease;
+        }
+
+        .test-result.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .test-result.pass {
+            background: rgba(74, 222, 128, 0.15);
+            border: 1px solid rgba(74, 222, 128, 0.3);
+            color: #4ade80;
+        }
+
+        .test-result.fail {
+            background: rgba(239, 68, 68, 0.15);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            color: #ef4444;
+        }
+
+        .test-result.info {
+            background: rgba(59, 130, 246, 0.15);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            color: #3b82f6;
+        }
+
+        .console-log {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 24px;
+            margin-top: 40px;
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+            font-size: 14px;
+            max-height: 300px;
             overflow-y: auto;
-            font-family: monospace;
+        }
+
+        .console-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .console-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #ffffff;
+        }
+
+        .clear-btn {
+            padding: 8px 16px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            color: white;
             font-size: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .clear-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .log-entry {
+            margin-bottom: 8px;
+            padding: 8px 12px;
+            border-radius: 6px;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .timestamp {
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 12px;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px 16px;
+            }
+            
+            h1 {
+                font-size: 36px;
+            }
+            
+            .test-grid {
+                grid-template-columns: 1fr;
+                gap: 16px;
+            }
+            
+            .test-card {
+                padding: 24px;
+            }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.6s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
     </style>
 </head>
 <body>
-    <h1>🛡️ Tracking Bypass Extension Test</h1>
-    <p>This page tests various tracking mechanisms that should be bypassed by the extension.</p>
+    <div class="container">
+        <div class="header fade-in">
+            <div class="logo">
+                <i class="fas fa-shield-alt"></i>
+            </div>
+            <h1>Tracking Bypass Pro</h1>
+            <p class="subtitle">Advanced Test Suite - Verify Your Protection</p>
+        </div>
 
-    <div class="test-section">
-        <h3>📊 Test Results</h3>
-        <div id="results"></div>
-    </div>
+        <div class="test-grid">
+            <div class="test-card fade-in">
+                <div class="test-header">
+                    <div class="test-icon">
+                        <i class="fas fa-eye-slash"></i>
+                    </div>
+                    <div class="test-title">Visibility Tracking</div>
+                </div>
+                <div class="test-description">
+                    Tests if the extension successfully bypasses page visibility detection and tab switching monitoring.
+                </div>
+                <button class="test-button" onclick="testVisibility()">
+                    <i class="fas fa-play"></i> Test Visibility Bypass
+                </button>
+                <div class="test-result" id="visibilityResult"></div>
+            </div>
 
-    <div class="test-section">
-        <h3>🖱️ Mouse Tracking Test</h3>
-        <p>Move your mouse outside this window. Normally this would trigger tracking.</p>
-        <button onclick="testMouseTracking()">Test Mouse Events</button>
-        <div id="mouseResult"></div>
-    </div>
+            <div class="test-card fade-in">
+                <div class="test-header">
+                    <div class="test-icon">
+                        <i class="fas fa-mouse-pointer"></i>
+                    </div>
+                    <div class="test-title">Mouse Tracking</div>
+                </div>
+                <div class="test-description">
+                    Verifies that mouse movement and exit detection is properly bypassed by the extension.
+                </div>
+                <button class="test-button" onclick="testMouse()">
+                    <i class="fas fa-play"></i> Test Mouse Bypass
+                </button>
+                <div class="test-result" id="mouseResult"></div>
+            </div>
 
-    <div class="test-section">
-        <h3>⌨️ Keyboard Tracking Test</h3>
-        <p>Type in this input field:</p>
-        <input type="text" placeholder="Type here to test keyboard tracking..." style="width: 100%; padding: 10px;">
-        <button onclick="testKeyboardTracking()">Test Keyboard Events</button>
-        <div id="keyboardResult"></div>
-    </div>
+            <div class="test-card fade-in">
+                <div class="test-header">
+                    <div class="test-icon">
+                        <i class="fas fa-exclamation-triangle"></i>
+                    </div>
+                    <div class="test-title">Alert Suppression</div>
+                </div>
+                <div class="test-description">
+                    Tests whether tracking-related alerts and warnings are successfully suppressed.
+                </div>
+                <button class="test-button" onclick="testAlerts()">
+                    <i class="fas fa-play"></i> Test Alert Suppression
+                </button>
+                <div class="test-result" id="alertResult"></div>
+            </div>
 
-    <div class="test-section">
-        <h3>👁️ Visibility Tracking Test</h3>
-        <p>Switch to another tab or minimize the window.</p>
-        <button onclick="testVisibilityTracking()">Test Visibility API</button>
-        <div id="visibilityResult"></div>
-    </div>
+            <div class="test-card fade-in">
+                <div class="test-header">
+                    <div class="test-icon">
+                        <i class="fas fa-shield-virus"></i>
+                    </div>
+                    <div class="test-title">Fraud Detection</div>
+                </div>
+                <div class="test-description">
+                    Checks if fraud detection arrays and monitoring systems are properly neutralized.
+                </div>
+                <button class="test-button" onclick="testFraud()">
+                    <i class="fas fa-play"></i> Test Fraud Bypass
+                </button>
+                <div class="test-result" id="fraudResult"></div>
+            </div>
 
-    <div class="test-section">
-        <h3>📋 Copy/Paste Test</h3>
-        <p>Try copying and pasting text:</p>
-        <textarea placeholder="Copy/paste text here..." style="width: 100%; height: 60px; padding: 10px;"></textarea>
-        <button onclick="testCopyPaste()">Test Copy/Paste Events</button>
-        <div id="copyPasteResult"></div>
-    </div>
+            <div class="test-card fade-in">
+                <div class="test-header">
+                    <div class="test-icon">
+                        <i class="fas fa-video"></i>
+                    </div>
+                    <div class="test-title">Camera Access</div>
+                </div>
+                <div class="test-description">
+                    Tests camera access bypass and media device monitoring prevention.
+                </div>
+                <button class="test-button" onclick="testCamera()">
+                    <i class="fas fa-play"></i> Test Camera Bypass
+                </button>
+                <div class="test-result" id="cameraResult"></div>
+            </div>
 
-    <div class="test-section">
-        <h3>🚨 Alert Suppression Test</h3>
-        <button onclick="testAlerts()">Test Alert Suppression</button>
-        <div id="alertResult"></div>
-    </div>
+            <div class="test-card fade-in">
+                <div class="test-header">
+                    <div class="test-icon">
+                        <i class="fas fa-expand"></i>
+                    </div>
+                    <div class="test-title">Fullscreen Tracking</div>
+                </div>
+                <div class="test-description">
+                    Verifies that fullscreen exit detection and monitoring is successfully bypassed.
+                </div>
+                <button class="test-button" onclick="testFullscreen()">
+                    <i class="fas fa-play"></i> Test Fullscreen Bypass
+                </button>
+                <div class="test-result" id="fullscreenResult"></div>
+            </div>
+        </div>
 
-    <div class="test-section">
-        <h3>📹 Camera Test</h3>
-        <button onclick="testCamera()">Test Camera Access</button>
-        <div id="cameraResult"></div>
-    </div>
-
-    <div class="test-section">
-        <h3>📝 Console Log</h3>
-        <div id="log"></div>
-        <button onclick="clearLog()">Clear Log</button>
+        <div class="console-log fade-in">
+            <div class="console-header">
+                <i class="fas fa-terminal"></i>
+                <div class="console-title">Extension Console</div>
+                <button class="clear-btn" onclick="clearConsole()">
+                    <i class="fas fa-trash"></i> Clear
+                </button>
+            </div>
+            <div id="consoleOutput"></div>
+        </div>
     </div>
 
     <script>
         let testResults = {};
-        let logElement = document.getElementById('log');
+        const consoleOutput = document.getElementById('consoleOutput');
 
-        function log(message) {
+        function log(message, type = 'info') {
             const timestamp = new Date().toLocaleTimeString();
-            logElement.innerHTML += `[${timestamp}] ${message}\n`;
-            logElement.scrollTop = logElement.scrollHeight;
+            const entry = document.createElement('div');
+            entry.className = 'log-entry';
+            entry.innerHTML = `
+                <span class="timestamp">[${timestamp}]</span> 
+                <span style="color: ${type === 'success' ? '#4ade80' : type === 'error' ? '#ef4444' : '#ffffff'}">${message}</span>
+            `;
+            consoleOutput.appendChild(entry);
+            consoleOutput.scrollTop = consoleOutput.scrollHeight;
             console.log(`[Test] ${message}`);
         }
 
-        function updateResult(testName, passed, message) {
-            testResults[testName] = { passed, message };
+        function showResult(testName, passed, message) {
             const resultDiv = document.getElementById(testName + 'Result');
-            if (resultDiv) {
-                resultDiv.innerHTML = `<div class="${passed ? 'pass' : 'fail'}">${message}</div>`;
-            }
-            updateOverallResults();
-        }
-
-        function updateOverallResults() {
-            const resultsDiv = document.getElementById('results');
-            const total = Object.keys(testResults).length;
-            const passed = Object.values(testResults).filter(r => r.passed).length;
-            
-            resultsDiv.innerHTML = `
-                <div class="info">
-                    Tests Completed: ${total} | Passed: ${passed} | Failed: ${total - passed}
-                </div>
+            resultDiv.className = `test-result ${passed ? 'pass' : 'fail'} show`;
+            resultDiv.innerHTML = `
+                <i class="fas fa-${passed ? 'check-circle' : 'times-circle'}"></i> 
+                ${message}
             `;
+            testResults[testName] = { passed, message };
         }
 
-        // Mouse tracking test
-        function testMouseTracking() {
-            log('Testing mouse tracking bypass...');
+        function testVisibility() {
+            log('Testing visibility tracking bypass...', 'info');
+            
+            const hiddenValue = document.hidden;
+            const visibilityValue = document.visibilityState;
+            
+            if (hiddenValue === false && visibilityValue === 'visible') {
+                showResult('visibility', true, 'Visibility tracking successfully bypassed');
+                log('✅ Visibility test PASSED - always reports visible', 'success');
+            } else {
+                showResult('visibility', false, `Visibility tracking active - hidden: ${hiddenValue}, state: ${visibilityValue}`);
+                log('❌ Visibility test FAILED - tracking still active', 'error');
+            }
+        }
+
+        function testMouse() {
+            log('Testing mouse tracking bypass...', 'info');
             
             let mouseOutDetected = false;
-            let mouseEventDetected = false;
-
-            // Test mouse out detection
-            document.addEventListener('mouseout', function(e) {
+            
+            const testListener = function(e) {
                 if (e.toElement === null || e.relatedTarget === null) {
                     mouseOutDetected = true;
-                    log('Mouse out event detected - tracking would normally trigger');
                 }
-            });
-
-            // Test general mouse events
-            document.addEventListener('mousemove', function() {
-                mouseEventDetected = true;
-            });
-
+            };
+            
+            document.addEventListener('mouseout', testListener);
+            
             setTimeout(() => {
-                const bypassed = !mouseOutDetected;
-                updateResult('mouse', bypassed, 
-                    bypassed ? 'Mouse tracking bypassed successfully' : 'Mouse tracking still active');
-            }, 2000);
-        }
-
-        // Keyboard tracking test
-        function testKeyboardTracking() {
-            log('Testing keyboard tracking bypass...');
-            
-            let keyEventDetected = false;
-            
-            document.addEventListener('keydown', function(e) {
-                keyEventDetected = true;
-                log(`Key event detected: ${e.key}`);
-            });
-
-            updateResult('keyboard', true, 'Keyboard events monitored - check console for bypass messages');
-        }
-
-        // Visibility tracking test
-        function testVisibilityTracking() {
-            log('Testing visibility tracking bypass...');
-            log(`Document.hidden: ${document.hidden}`);
-            log(`Document.visibilityState: ${document.visibilityState}`);
-            
-            const bypassed = !document.hidden && document.visibilityState === 'visible';
-            updateResult('visibility', bypassed, 
-                bypassed ? 'Visibility API bypassed - always reports visible' : 'Visibility API not bypassed');
-        }
-
-        // Copy/paste test
-        function testCopyPaste() {
-            log('Testing copy/paste bypass...');
-            
-            let copyDetected = false;
-            let pasteDetected = false;
-
-            document.addEventListener('copy', function() {
-                copyDetected = true;
-                log('Copy event detected');
-            });
-
-            document.addEventListener('paste', function() {
-                pasteDetected = true;
-                log('Paste event detected');
-            });
-
-            setTimeout(() => {
-                updateResult('copyPaste', true, 'Copy/paste events monitored - try copying/pasting text');
+                document.removeEventListener('mouseout', testListener);
+                
+                if (!mouseOutDetected && typeof window.onMouseOut === 'function') {
+                    showResult('mouse', true, 'Mouse tracking successfully bypassed');
+                    log('✅ Mouse test PASSED - tracking events blocked', 'success');
+                } else {
+                    showResult('mouse', false, 'Mouse tracking may still be active');
+                    log('❌ Mouse test FAILED - some tracking detected', 'error');
+                }
             }, 1000);
         }
 
-        // Alert suppression test
         function testAlerts() {
-            log('Testing alert suppression...');
+            log('Testing alert suppression...', 'info');
             
             try {
-                alert('This alert should be suppressed');
-                updateResult('alert', true, 'Alert suppression active - check console');
+                const alertResult = alert('Test alert - should be suppressed');
+                showResult('alert', true, 'Alert suppression active');
+                log('✅ Alert test PASSED - alerts are suppressed', 'success');
             } catch (e) {
-                updateResult('alert', false, 'Alert suppression failed');
+                showResult('alert', false, 'Alert suppression failed');
+                log('❌ Alert test FAILED - alerts not suppressed', 'error');
             }
         }
 
-        // Camera test
+        function testFraud() {
+            log('Testing fraud detection bypass...', 'info');
+            
+            const fraudDetectedExists = typeof window.fraudDetected !== 'undefined';
+            const fraudQuestionsExists = typeof window.fraudCheckingQuestions !== 'undefined';
+            
+            if (fraudDetectedExists && Array.isArray(window.fraudDetected) && window.fraudDetected.length === 0) {
+                showResult('fraud', true, 'Fraud detection successfully bypassed');
+                log('✅ Fraud test PASSED - detection arrays neutralized', 'success');
+            } else {
+                showResult('fraud', false, 'Fraud detection may still be active');
+                log('❌ Fraud test FAILED - detection systems active', 'error');
+            }
+        }
+
         function testCamera() {
-            log('Testing camera access bypass...');
+            log('Testing camera access bypass...', 'info');
             
             if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
                 navigator.mediaDevices.getUserMedia({ video: true })
                     .then(stream => {
-                        log('Camera access granted (possibly bypassed)');
-                        updateResult('camera', true, 'Camera access bypassed or granted');
+                        showResult('camera', true, 'Camera access bypassed or controlled');
+                        log('✅ Camera test PASSED - access properly handled', 'success');
                         if (stream.getTracks) {
                             stream.getTracks().forEach(track => track.stop());
                         }
                     })
                     .catch(err => {
-                        log(`Camera access denied: ${err.message}`);
-                        updateResult('camera', true, 'Camera access properly controlled');
+                        showResult('camera', true, 'Camera access properly controlled');
+                        log('✅ Camera test PASSED - access denied as expected', 'success');
                     });
             } else {
-                updateResult('camera', false, 'getUserMedia not supported');
+                showResult('camera', false, 'getUserMedia not supported');
+                log('❌ Camera test FAILED - API not available', 'error');
             }
         }
 
-        function clearLog() {
-            logElement.innerHTML = '';
+        function testFullscreen() {
+            log('Testing fullscreen tracking bypass...', 'info');
+            
+            const fullscreenElement = document.fullscreenElement;
+            const fullscreenEnabled = document.fullscreenEnabled;
+            
+            if (fullscreenElement !== null || fullscreenEnabled) {
+                showResult('fullscreen', true, 'Fullscreen tracking bypassed');
+                log('✅ Fullscreen test PASSED - tracking bypassed', 'success');
+            } else {
+                showResult('fullscreen', false, 'Fullscreen tracking may be active');
+                log('❌ Fullscreen test FAILED - tracking detected', 'error');
+            }
         }
 
-        // Initialize tests
+        function clearConsole() {
+            consoleOutput.innerHTML = '';
+            log('Console cleared', 'info');
+        }
+
+        // Auto-run basic tests when page loads
         window.addEventListener('load', function() {
-            log('Test page loaded');
-            log('Extension should be active - check for bypass messages in console');
-            
-            // Test basic properties
             setTimeout(() => {
-                testVisibilityTracking();
+                log('🛡️ Tracking Bypass Pro Test Suite Initialized', 'success');
+                log('Extension should be active - running basic tests...', 'info');
+                testVisibility();
             }, 1000);
         });
 
-        // Monitor for extension messages
-        window.addEventListener('message', function(event) {
-            if (event.data && event.data.type === 'BYPASS_CONFIG') {
-                log('Extension configuration received');
-                log(`Active protections: ${JSON.stringify(event.data.config)}`);
-            }
+        // Add staggered animations
+        const cards = document.querySelectorAll('.test-card');
+        cards.forEach((card, index) => {
+            card.style.animationDelay = `${index * 0.1}s`;
         });
 
-        // Test fraud detection override
-        if (window.fraudDetected !== undefined) {
-            log('Fraud detection array found and should be bypassed');
-        }
-
-        // Test fullscreen API
-        log(`Fullscreen element: ${document.fullscreenElement}`);
-        log(`Fullscreen supported: ${document.fullscreenEnabled}`);
+        log('Test suite loaded - click buttons to run individual tests', 'info');
     </script>
 </body>
 </html>

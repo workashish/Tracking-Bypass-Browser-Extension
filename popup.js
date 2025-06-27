@@ -121,19 +121,19 @@ document.addEventListener('DOMContentLoaded', function() {
 
         if (activeCount === 0) {
             statusText = 'All Protections Disabled';
-            statusIcon = 'fas fa-shield-alt';
+            statusIcon = '<span class="icon icon-shield"></span>';
             statusClass = 'status';
         } else if (activeCount === totalCount) {
             statusText = 'Full Protection Active';
-            statusIcon = 'fas fa-shield-check';
+            statusIcon = '<span class="icon icon-shield"></span>';
             statusClass = 'status active';
         } else {
             statusText = `${activeCount}/${totalCount} Protections Active`;
-            statusIcon = 'fas fa-shield-halved';
+            statusIcon = '<span class="icon icon-shield"></span>';
             statusClass = 'status active';
         }
 
-        statusElement.innerHTML = `<i class="${statusIcon} status-icon"></i>${statusText}`;
+        statusElement.innerHTML = `<span class="status-icon">${statusIcon}</span>${statusText}`;
         statusElement.className = statusClass + ' fade-in';
     }
 
