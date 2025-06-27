@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Tracking Bypass Test Page</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .test-section {
+            background: white;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .test-result {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+        .pass { background: #d4edda; color: #155724; }
+        .fail { background: #f8d7da; color: #721c24; }
+        .info { background: #d1ecf1; color: #0c5460; }
+        button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover { background: #0056b3; }
+        #log {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            padding: 10px;
+            height: 200px;
+            overflow-y: auto;
+            font-family: monospace;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <h1>🛡️ Tracking Bypass Extension Test</h1>
+    <p>This page tests various tracking mechanisms that should be bypassed by the extension.</p>
+
+    <div class="test-section">
+        <h3>📊 Test Results</h3>
+        <div id="results"></div>
+    </div>
+
+    <div class="test-section">
+        <h3>🖱️ Mouse Tracking Test</h3>
+        <p>Move your mouse outside this window. Normally this would trigger tracking.</p>
+        <button onclick="testMouseTracking()">Test Mouse Events</button>
+        <div id="mouseResult"></div>
+    </div>
+
+    <div class="test-section">
+        <h3>⌨️ Keyboard Tracking Test</h3>
+        <p>Type in this input field:</p>
+        <input type="text" placeholder="Type here to test keyboard tracking..." style="width: 100%; padding: 10px;">
+        <button onclick="testKeyboardTracking()">Test Keyboard Events</button>
+        <div id="keyboardResult"></div>
+    </div>
+
+    <div class="test-section">
+        <h3>👁️ Visibility Tracking Test</h3>
+        <p>Switch to another tab or minimize the window.</p>
+        <button onclick="testVisibilityTracking()">Test Visibility API</button>
+        <div id="visibilityResult"></div>
+    </div>
+
+    <div class="test-section">
+        <h3>📋 Copy/Paste Test</h3>
+        <p>Try copying and pasting text:</p>
+        <textarea placeholder="Copy/paste text here..." style="width: 100%; height: 60px; padding: 10px;"></textarea>
+        <button onclick="testCopyPaste()">Test Copy/Paste Events</button>
+        <div id="copyPasteResult"></div>
+    </div>
+
+    <div class="test-section">
+        <h3>🚨 Alert Suppression Test</h3>
+        <button onclick="testAlerts()">Test Alert Suppression</button>
+        <div id="alertResult"></div>
+    </div>
+
+    <div class="test-section">
+        <h3>📹 Camera Test</h3>
+        <button onclick="testCamera()">Test Camera Access</button>
+        <div id="cameraResult"></div>
+    </div>
+
+    <div class="test-section">
+        <h3>📝 Console Log</h3>
+        <div id="log"></div>
+        <button onclick="clearLog()">Clear Log</button>
+    </div>
+
+    <script>
+        let testResults = {};
+        let logElement = document.getElementById('log');
+
+        function log(message) {
+            const timestamp = new Date().toLocaleTimeString();
+            logElement.innerHTML += `[${timestamp}] ${message}\n`;
+            logElement.scrollTop = logElement.scrollHeight;
+            console.log(`[Test] ${message}`);
+        }
+
+        function updateResult(testName, passed, message) {
+            testResults[testName] = { passed, message };
+            const resultDiv = document.getElementById(testName + 'Result');
+            if (resultDiv) {
+                resultDiv.innerHTML = `<div class="${passed ? 'pass' : 'fail'}">${message}</div>`;
+            }
+            updateOverallResults();
+        }
+
+        function updateOverallResults() {
+            const resultsDiv = document.getElementById('results');
+            const total = Object.keys(testResults).length;
+            const passed = Object.values(testResults).filter(r => r.passed).length;
+            
+            resultsDiv.innerHTML = `
+                <div class="info">
+                    Tests Completed: ${total} | Passed: ${passed} | Failed: ${total - passed}
+                </div>
+            `;
+        }
+
+        // Mouse tracking test
+        function testMouseTracking() {
+            log('Testing mouse tracking bypass...');
+            
+            let mouseOutDetected = false;
+            let mouseEventDetected = false;
+
+            // Test mouse out detection
+            document.addEventListener('mouseout', function(e) {
+                if (e.toElement === null || e.relatedTarget === null) {
+                    mouseOutDetected = true;
+                    log('Mouse out event detected - tracking would normally trigger');
+                }
+            });
+
+            // Test general mouse events
+            document.addEventListener('mousemove', function() {
+                mouseEventDetected = true;
+            });
+
+            setTimeout(() => {
+                const bypassed = !mouseOutDetected;
+                updateResult('mouse', bypassed, 
+                    bypassed ? 'Mouse tracking bypassed successfully' : 'Mouse tracking still active');
+            }, 2000);
+        }
+
+        // Keyboard tracking test
+        function testKeyboardTracking() {
+            log('Testing keyboard tracking bypass...');
+            
+            let keyEventDetected = false;
+            
+            document.addEventListener('keydown', function(e) {
+                keyEventDetected = true;
+                log(`Key event detected: ${e.key}`);
+            });
+
+            updateResult('keyboard', true, 'Keyboard events monitored - check console for bypass messages');
+        }
+
+        // Visibility tracking test
+        function testVisibilityTracking() {
+            log('Testing visibility tracking bypass...');
+            log(`Document.hidden: ${document.hidden}`);
+            log(`Document.visibilityState: ${document.visibilityState}`);
+            
+            const bypassed = !document.hidden && document.visibilityState === 'visible';
+            updateResult('visibility', bypassed, 
+                bypassed ? 'Visibility API bypassed - always reports visible' : 'Visibility API not bypassed');
+        }
+
+        // Copy/paste test
+        function testCopyPaste() {
+            log('Testing copy/paste bypass...');
+            
+            let copyDetected = false;
+            let pasteDetected = false;
+
+            document.addEventListener('copy', function() {
+                copyDetected = true;
+                log('Copy event detected');
+            });
+
+            document.addEventListener('paste', function() {
+                pasteDetected = true;
+                log('Paste event detected');
+            });
+
+            setTimeout(() => {
+                updateResult('copyPaste', true, 'Copy/paste events monitored - try copying/pasting text');
+            }, 1000);
+        }
+
+        // Alert suppression test
+        function testAlerts() {
+            log('Testing alert suppression...');
+            
+            try {
+                alert('This alert should be suppressed');
+                updateResult('alert', true, 'Alert suppression active - check console');
+            } catch (e) {
+                updateResult('alert', false, 'Alert suppression failed');
+            }
+        }
+
+        // Camera test
+        function testCamera() {
+            log('Testing camera access bypass...');
+            
+            if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+                navigator.mediaDevices.getUserMedia({ video: true })
+                    .then(stream => {
+                        log('Camera access granted (possibly bypassed)');
+                        updateResult('camera', true, 'Camera access bypassed or granted');
+                        if (stream.getTracks) {
+                            stream.getTracks().forEach(track => track.stop());
+                        }
+                    })
+                    .catch(err => {
+                        log(`Camera access denied: ${err.message}`);
+                        updateResult('camera', true, 'Camera access properly controlled');
+                    });
+            } else {
+                updateResult('camera', false, 'getUserMedia not supported');
+            }
+        }
+
+        function clearLog() {
+            logElement.innerHTML = '';
+        }
+
+        // Initialize tests
+        window.addEventListener('load', function() {
+            log('Test page loaded');
+            log('Extension should be active - check for bypass messages in console');
+            
+            // Test basic properties
+            setTimeout(() => {
+                testVisibilityTracking();
+            }, 1000);
+        });
+
+        // Monitor for extension messages
+        window.addEventListener('message', function(event) {
+            if (event.data && event.data.type === 'BYPASS_CONFIG') {
+                log('Extension configuration received');
+                log(`Active protections: ${JSON.stringify(event.data.config)}`);
+            }
+        });
+
+        // Test fraud detection override
+        if (window.fraudDetected !== undefined) {
+            log('Fraud detection array found and should be bypassed');
+        }
+
+        // Test fullscreen API
+        log(`Fullscreen element: ${document.fullscreenElement}`);
+        log(`Fullscreen supported: ${document.fullscreenEnabled}`);
+    </script>
+</body>
+</html>

@@ -1,0 +1,51 @@
+{
+  "manifest_version": 3,
+  "name": "Tracking Bypass Extension",
+  "version": "1.0.0",
+  "description": "Bypass tracking mechanisms while maintaining website functionality",
+  "permissions": [
+    "activeTab",
+    "storage",
+    "scripting",
+    "notifications",
+    "contextMenus",
+    "webRequest"
+  ],
+  "host_permissions": [
+    "<all_urls>"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content.js"],
+      "run_at": "document_start",
+      "all_frames": true
+    }
+  ],
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "Tracking Bypass Controls"
+  },
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "web_accessible_resources": [
+    {
+      "resources": ["injected.js", "early-inject.js"],
+      "matches": ["<all_urls>"]
+    }
+  ],
+  "commands": {
+    "toggle-bypass": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+B"
+      },
+      "description": "Toggle tracking bypass"
+    }
+  }
+}

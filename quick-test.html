@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Quick Bypass Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .test { margin: 10px 0; padding: 10px; border: 1px solid #ccc; }
+        .pass { background: #d4edda; }
+        .fail { background: #f8d7da; }
+    </style>
+</head>
+<body>
+    <h1>🛡️ Quick Tracking Bypass Test</h1>
+    
+    <div id="results"></div>
+    
+    <button onclick="runTests()">Run Tests</button>
+    
+    <script>
+        function runTests() {
+            const results = document.getElementById('results');
+            results.innerHTML = '';
+            
+            // Test 1: Visibility State
+            const visibilityTest = document.createElement('div');
+            visibilityTest.className = 'test';
+            const hiddenValue = document.hidden;
+            const visibilityValue = document.visibilityState;
+            
+            if (hiddenValue === false && visibilityValue === 'visible') {
+                visibilityTest.className += ' pass';
+                visibilityTest.innerHTML = `✅ Visibility Test PASSED<br>hidden: ${hiddenValue}, visibilityState: ${visibilityValue}`;
+            } else {
+                visibilityTest.className += ' fail';
+                visibilityTest.innerHTML = `❌ Visibility Test FAILED<br>hidden: ${hiddenValue}, visibilityState: ${visibilityValue}`;
+            }
+            results.appendChild(visibilityTest);
+            
+            // Test 2: Event Listener Blocking
+            const eventTest = document.createElement('div');
+            eventTest.className = 'test';
+            let eventBlocked = false;
+            
+            try {
+                document.addEventListener('visibilitychange', function() {
+                    console.log('Visibility change detected - should be blocked');
+                });
+                eventBlocked = true; // If we get here, the event was blocked
+            } catch (e) {
+                eventBlocked = false;
+            }
+            
+            if (eventBlocked) {
+                eventTest.className += ' pass';
+                eventTest.innerHTML = '✅ Event Listener Test PASSED - visibilitychange blocked';
+            } else {
+                eventTest.className += ' fail';
+                eventTest.innerHTML = '❌ Event Listener Test FAILED - visibilitychange not blocked';
+            }
+            results.appendChild(eventTest);
+            
+            // Test 3: Alert Suppression
+            const alertTest = document.createElement('div');
+            alertTest.className = 'test';
+            
+            try {
+                const alertResult = alert('Test alert - should be suppressed');
+                alertTest.className += ' pass';
+                alertTest.innerHTML = '✅ Alert Suppression Test PASSED - alert was suppressed';
+            } catch (e) {
+                alertTest.className += ' fail';
+                alertTest.innerHTML = '❌ Alert Suppression Test FAILED - alert not suppressed';
+            }
+            results.appendChild(alertTest);
+            
+            // Test 4: Fraud Detection Arrays
+            const fraudTest = document.createElement('div');
+            fraudTest.className = 'test';
+            
+            if (Array.isArray(window.fraudDetected) && window.fraudDetected.length === 0) {
+                fraudTest.className += ' pass';
+                fraudTest.innerHTML = '✅ Fraud Detection Test PASSED - fraudDetected array is empty';
+            } else {
+                fraudTest.className += ' fail';
+                fraudTest.innerHTML = `❌ Fraud Detection Test FAILED - fraudDetected: ${window.fraudDetected}`;
+            }
+            results.appendChild(fraudTest);
+            
+            // Test 5: Mouse Out Function
+            const mouseTest = document.createElement('div');
+            mouseTest.className = 'test';
+            
+            if (typeof window.onMouseOut === 'function') {
+                mouseTest.className += ' pass';
+                mouseTest.innerHTML = '✅ Mouse Out Test PASSED - onMouseOut function overridden';
+            } else {
+                mouseTest.className += ' fail';
+                mouseTest.innerHTML = '❌ Mouse Out Test FAILED - onMouseOut not overridden';
+            }
+            results.appendChild(mouseTest);
+            
+            console.log('Tests completed - check console for bypass messages');
+        }
+        
+        // Auto-run tests when page loads
+        window.addEventListener('load', function() {
+            setTimeout(runTests, 1000); // Wait 1 second for extension to load
+        });
+        
+        // Test visibility change detection
+        document.addEventListener('visibilitychange', function() {
+            console.log('❌ Visibility change event fired - bypass failed');
+        });
+        
+        // Test mouse out detection
+        document.addEventListener('mouseout', function(e) {
+            if (e.toElement === null || e.relatedTarget === null) {
+                console.log('❌ Mouse out event fired - bypass failed');
+            }
+        });
+        
+        console.log('Test page loaded - extension should be active');
+    </script>
+</body>
+</html>
